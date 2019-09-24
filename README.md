@@ -27,7 +27,7 @@ dotnet test Tests/Tests.csproj
 
 ## Running
 ```
-dotnet run Tetris/Tetris.csproj
+dotnet run --project Tetris/Tetris.csproj
 ```
 Input is read from `input.txt`.
 Output is written to `output.txt`.
