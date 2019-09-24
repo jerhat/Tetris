@@ -8,7 +8,7 @@ namespace Tetris
 {
     public class Board
     {
-        // Each column is represented by an array of bool (true: the pixel is used ; false: the pixel is free)
+        // Each column of the board is represented by a list of bool (true: the pixel is used ; false: the pixel is free)
         private readonly List<bool>[] _columns;
 
         // List of full rows
@@ -41,7 +41,7 @@ namespace Tetris
         /// <returns></returns>
         public int GetResult()
         {
-            return GetTopRow() - fullRows.Count;
+            return GetBoardTopRow() - fullRows.Count;
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace Tetris
             return Math.Max(_columns[column].FindLastIndex(x => x) + 1, 0);
         }
 
-        private int GetTopRow()
+        private int GetBoardTopRow()
         {
             return _columns.Select((c, i) => GetLowestFreeRow(i)).Max();
         }
