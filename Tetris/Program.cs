@@ -1,6 +1,10 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using Tetris.Services;
 using Tetris.Shapes;
 
 namespace Tetris
@@ -15,24 +19,24 @@ namespace Tetris
 
         static void Main(string[] args)
         {
-            string line;
+            //setup DI
+            var services = new ServiceCollection()
+                .InitializeServices(BOARD_NB_COLUMNS);
 
-            using (var reader = new StreamReader(INPUT_FN))
+            using (var serviceProvider = services.BuildServiceProvider())
             {
-                using (var writer = File.CreateText(OUTPUT_FN))
-                {
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        if (string.IsNullOrEmpty(line))
-                            continue;
-
-                        var game = new Game(BOARD_NB_COLUMNS, line);
-                        var result = game.GetResult();
-
-                        writer.WriteLine(result);
-                    }
-                }
+                Process(serviceProvider);
             }
+        }
+
+        private static void Process(ServiceProvider serviceProvider)
+        {
+            var lines = File.ReadAllLines(INPUT_FN);
+
+            var gameManager = serviceProvider.GetService<IGameManagerService>();
+            var results = gameManager.StartAll(lines);
+
+            File.WriteAllLines(OUTPUT_FN, results.Select(x => x.ToString()));
         }
     }
 }

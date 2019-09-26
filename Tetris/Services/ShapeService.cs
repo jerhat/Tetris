@@ -1,18 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Tetris.Shapes;
 
-namespace Tetris.Shapes
+namespace Tetris.Services
 {
-    class ShapeProvider
+    /// <summary>
+    /// Service responsible for providing shapes
+    /// </summary>
+    public interface IShapeService
+    {
+        Shape GetShape(char code);
+    }
+
+    public class ShapeService : IShapeService
     {
         private static Dictionary<Char, Shape> _shapes;
 
-        public static Shape GetShape(char code)
+        static ShapeService()
         {
-            if (null == _shapes)
-                InitCache();
+            InitCache();
+        }
 
+        public Shape GetShape(char code)
+        {
             if (!_shapes.TryGetValue(code, out var shape))
                 throw new Exception($"Unknown shape code: {code}");
 
